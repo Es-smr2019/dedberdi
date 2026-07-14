@@ -10,9 +10,9 @@ from aiogram.filters import Command, CommandObject
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 # Получаем токен из Environment Variables на Bothost
-TOKEN = os.getenv("8987715811:AAHhMtYxhuKV3F5XtwPwm2PNzyfnW1RuZ1w")
+TOKEN = os.getenv("BOT_TOKEN")
 if not TOKEN:
-    TOKEN = ""
+    TOKEN = "8987715811:AAHhMtYxhuKV3F5XtwPwm2PNzyfnW1RuZ1w"
 
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
