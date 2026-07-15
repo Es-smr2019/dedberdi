@@ -112,15 +112,15 @@ def add_balance(user_id, amount):
 
 # --- АДМИН ПАНЕЛЬ ---
 def is_admin(message: types.Message):
-    return message.from_user.username and message.from_user.username.lower() == "misedowner"
+    return message.from_user.username and message.from_user.username.lower() == "misedowner".lower()
 
 @dp.message(Command("админ", "admin"))
 async def cmd_admin(message: types.Message):
     if not is_admin(message): return
     await message.answer(
         "👑 <b>Панель Владельца</b>\n\n"
-        "<code>/выдать валюту &lt;сумма&gt; [ID]</code>\n"
-        "<code>/выдать инк &lt;сумма&gt; [ID]</code>\n"
+        "<code>/выдать валюту сумма [ID]</code>\n"
+        "<code>/выдать инк сумма [ID]</code>\n"
         "<code>/логи</code> - последние 10 операций\n"
         "<i>Если не указать ID, выдастся тебе.</i>", parse_mode="HTML"
     )
@@ -263,7 +263,7 @@ async def equip_callback(callback: types.CallbackQuery):
 @dp.message(Command("перевод", "pay"))
 async def cmd_transfer(message: types.Message, command: CommandObject):
     args = command.args
-    if not args: return await message.answer("⚠️ Формат: /перевод <сумма> <ID> (или в ответ на сообщение)")
+    if not args: return await message.answer("⚠️ Формат: /перевод [сумма] [ID] (или в ответ на сообщение)")
     
     parts = args.split()
     if not parts[0].isdigit(): return await message.answer("⚠️ Сумма должна быть числом!")
@@ -312,10 +312,11 @@ async def execute_transfer(message, from_id, to_id, amount):
 @dp.message(Command("start", "старт"))
 async def cmd_start(message: types.Message):
     register_user(message.from_user.id)
+    # Исправлена ошибка HTML: удалены символы '<' и '>' внутри текста
     await message.answer(
         "🎉 Добро пожаловать!\n"
         "🎮 <b>Игры:</b> /монета, /кубик, /казино, /дартс, /баскет, /мины\n"
-        "💸 <b>Перевод:</b> /перевод <сумма> <ID>\n"
+        "💸 <b>Перевод:</b> /перевод сумма ID\n"
         "💼 <b>Профиль:</b> /профиль, /инвентарь\n"
         "📦 <b>Донат:</b> /кейс (49 INCS)", parse_mode="HTML"
     )
@@ -329,9 +330,9 @@ async def cmd_profile(message: types.Message):
 # --- ИГРЫ (С ПОДДЕРЖКОЙ ПРЕДМЕТОВ) ---
 @dp.message(Command("монета", "flip"))
 async def play_flip(message: types.Message, command: CommandObject):
-    if not command.args: return await message.answer("⚠️ Формат: /монета <ставка> <орел/решка>")
+    if not command.args: return await message.answer("⚠️ Формат: /монета [ставка] [орел/решка]")
     parts = command.args.split()
-    if len(parts) != 2 or parts[1].lower() not in ["орел", "решка"]: return await message.answer("⚠️ Формат: /монета <ставка> <орел/решка>")
+    if len(parts) != 2 or parts[1].lower() not in ["орел", "решка"]: return await message.answer("⚠️ Формат: /монета [ставка] [орел/решка]")
     choice = parts[1].lower()
 
     ok, bet, err, item = process_bet(message.from_user.id, parts[0])
